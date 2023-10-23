@@ -21,7 +21,8 @@ namespace EvernoteClone.ViewModel
         public Notebook SelectedNotebook
         {
             get { return selectedNotebook; }
-            set { 
+            set
+            {
                 selectedNotebook = value;
                 OnPropertyChanged("SelectedNotebook");
                 GetNotes();
@@ -31,6 +32,8 @@ namespace EvernoteClone.ViewModel
         public ObservableCollection<Note> Notes { get; set; }
         public NewNotebookCommand NewNotebookCommand { get; set; }
         public NewNoteCommand NewNoteCommand { get; set; }
+        public BoldCommand BoldCommand { get; set; }
+        public bool IsBold { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -42,6 +45,7 @@ namespace EvernoteClone.ViewModel
         {
             NewNotebookCommand = new NewNotebookCommand(this);
             NewNoteCommand = new NewNoteCommand(this);
+            BoldCommand = new BoldCommand(this);
 
             Notebooks = new ObservableCollection<Notebook>();
             Notes = new ObservableCollection<Note>();
@@ -92,8 +96,11 @@ namespace EvernoteClone.ViewModel
                     Notes.Add(note);
                 }
             }
-
-
+        }
+        private void ToggleBold()
+        {
+            IsBold = !IsBold;
+            // Implement logic to apply bold to the text in the contentRichTextBox
         }
     }
 }

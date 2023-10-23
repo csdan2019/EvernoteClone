@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -29,8 +32,20 @@ namespace EvernoteClone.View
             Application.Current.Shutdown();
         }
 
-        private void SpeechButton_Click(object sender, RoutedEventArgs e)
+        private async void SpeechButton_Click(object sender, RoutedEventArgs e)
         {
+            string key = "c2cc2001ea4544d0b08b08a34ff6e27f";
+            string region = "eastus";
+            var speechConfig = SpeechConfig.FromSubscription(key, region);
+            using(var audioConfig = AudioConfig.FromDefaultMicrophoneInput())
+            {
+                using (var recognizer = new SpeechRecognizer(speechConfig))
+                {
+                    // will wait until user stops talking
+                    var result = await recognizer.RecognizeOnceAsync();
+                    contentRichTextBox.Document.Blocks.Add(new Paragraph(new Run(result.Text)));
+                }
+            }
 
         }
 
@@ -42,7 +57,24 @@ namespace EvernoteClone.View
 
         private void boldButton_Click(object sender, RoutedEventArgs e)
         {
-            contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+            // if value is null set to false
+            bool isToggled = (sender as ToggleButton).IsChecked ?? false;
+            if (isToggled)
+            {
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+            }
+            else
+            {
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Normal);
+
+            }
+        }
+
+        private void contentRichTextBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var selectedWeight = contentRichTextBox.Selection.GetPropertyValue(FontWeightProperty);
+            boldButton.IsChecked = (selectedWeight != DependencyProperty.UnsetValue) && selectedWeight.Equals(FontWeights.Bold);
+
         }
     }
 }

@@ -39,7 +39,7 @@
                     <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            
+
         </ListView>
         <ListView DockPanel.Dock="Left"
                   Width="140"
@@ -54,20 +54,21 @@
             <ToolBar>
                 <Button Content="Speech"
                         Click="SpeechButton_Click"/>
-                <Button x:Name="boldButton"
+                <ToggleButton x:Name="boldButton"
                         Click="boldButton_Click">
                     <TextBlock Text="B"
                                FontWeight="Bold"/>
-                </Button>
+                </ToggleButton>
             </ToolBar>
-            
+
         </ToolBarTray>
 
 
         <Grid>
             <RichTextBox x:Name="contentRichTextBox"
-                         TextChanged="contentRichTextBox_TextChanged"/>
+                         TextChanged="contentRichTextBox_TextChanged"
+                         SelectionChanged="contentRichTextBox_SelectionChanged"/>
         </Grid>
-            
+
     </DockPanel>
 </Window>
